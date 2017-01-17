@@ -1,0 +1,19 @@
+$icon-font-path: '../fonts/';
+
+// bower:scss
+@import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+// endbower
+
+#result {
+	li {
+		list-style-type: none;
+	}
+	img {
+		width: 250px;
+		height: 250px;
+		border: 1px solid #000;
+	}
+	p {
+		width: 250px;
+	}
+}
