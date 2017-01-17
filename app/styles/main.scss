@@ -3,17 +3,39 @@ $icon-font-path: '../fonts/';
 // bower:scss
 @import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 // endbower
+// 
+body {
+	background: #222;
+}
 
 #result {
+	background: #222;
+	padding: 0;
 	li {
 		list-style-type: none;
+		margin: 15px 0;
+		width: 250px;
+		border-bottom: 1px dashed #fff;
+		padding-bottom: 20px;
 	}
 	img {
 		width: 250px;
 		height: 250px;
 		border: 1px solid #000;
+		margin: 20px 0;
 	}
 	p {
 		width: 250px;
+		color: #f2f2ed;
+	}
+	span {
+		color: #fff;
+	}
+	button {
+		border: 1px solid #000;
+		background: #fff;
+		font-size: 12px;
+		width: 250px;
+		padding: 10px 0;
 	}
 }

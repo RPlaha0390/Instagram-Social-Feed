@@ -1,55 +1,64 @@
-$(document).ready(function(){
-	'use strict';
-
-
+$(document).ready(function() {
+  'use strict';
  
-	  $.getJSON('https://api.instagram.com/v1/users/self/media/recent/?access_token=536531575.2c8f4c4.9a09a0dfbe304ba1a803b0cafa025d13')
-      .done(function(dataInsta) {
-        printDataToPage(dataInsta);
-        removeInstaPost();
-      })
+  var postsToExclude = localStorage.getItem('excludedPosts') ? localStorage.getItem('excludedPosts').split(',') : null;
  
-    function printDataToPage(dataInsta) {
-      var html = '';
+  $.getJSON('https://api.instagram.com/v1/users/self/media/recent/?access_token=536531575.2c8f4c4.9a09a0dfbe304ba1a803b0cafa025d13')
+    .done(function(dataInsta) {
+      var dataToPrint = dataInsta.data;
  
-    	$.each(dataInsta.data, function (index, value) {
-    	  var image = value.images.standard_resolution.url
-    	  var hashtags = value.caption.text
-    	  var dateCreated = formatInstagramTime(value.created_time);
-			 	var postID = value.id
-    	  html += '<li data-post-id="' + postID + '"><span>' + dateCreated + '</span><br/><img src="' + image + '"><br/><p>' + hashtags +'</p><button>Remove Post</button></li>';
+      if (postsToExclude) {
+        dataToPrint = _.filter(dataInsta.data, function(obj) {
+        	console.log(obj);
+        	console.log(postsToExclude);
+        	console.log(dataToPrint);
+          return postsToExclude.indexOf(obj.id) < 0;
+        })
+      }
+      
+      printDataToPage(dataToPrint);
+    })
  
-    	  return index < 4;
-    	});
+  $('#result').on('click', 'button', function() {
+    var id = $(this).parent().data('post-id');
  
-      $('#result ul').append(html)
-    }
+    $(this).parent().remove();
+    removeInstaPost(id);
+  });
  
-    function formatInstagramTime(timeInsta) {
-      var date = new Date(timeInsta * 1000);
-      var monthName = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      var year = date.getFullYear();
-      var month = monthName[date.getMonth()];
-      var day = date.getDate();
+  function printDataToPage(dataInsta) {
+    var html = '';
  
-      return day + ' ' + month + ' ' + year;
-    }
-
-    function removeInstaPost() {
-    	var postsInsta = [];
-
-    	$('ul li').each(function() {
-        var postDataID = $(this).data('post-id');
-        postsInsta.push(postDataID);
-	    });
-
-	    console.log(postsInsta);
-    }
-
-    $('button').click(function() { 
-			removeInstaPost();
-
-
-		});
-
+    $.each(dataInsta, function(index, value) {
+      var image = value.images.standard_resolution.url
+      var hashtags = value.caption.text
+      var dateCreated = formatInstagramTime(value.created_time);
+      var postID = value.id
+      html += '<li data-post-id="' + postID + '"><span>' + dateCreated + '</span><br/><img src="' + image + '"><br/><p>' + hashtags + '</p><button>Remove Post</button></li>';
+ 
+      return index < 4;
+    });
+ 
+    $('#result ul').append(html)
+  }
+ 
+  function formatInstagramTime(timeInsta) {
+    var date = new Date(timeInsta * 1000);
+    var monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var year = date.getFullYear();
+    var month = monthName[date.getMonth()];
+    var day = date.getDate();
+ 
+    return day + ' ' + month + ' ' + year;
+  }
+ 
+  function removeInstaPost(id) {
+  	console.log(id)
+    var excludedPosts = localStorage.getItem('excludedPosts') ? localStorage.getItem('excludedPosts').split(',') : [];
+ 		
+ 		console.log(excludedPosts);
+    excludedPosts.push(id);
+    localStorage.setItem('excludedPosts', excludedPosts);
+  }
 });
+        
