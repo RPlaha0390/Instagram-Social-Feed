@@ -9,13 +9,9 @@ $(document).ready(function() {
  
       if (postsToExclude) {
         dataToPrint = _.filter(dataInsta.data, function(obj) {
-        	console.log(obj);
-        	console.log(postsToExclude);
-        	console.log(dataToPrint);
           return postsToExclude.indexOf(obj.id) < 0;
         })
-      }
-      
+      }    
       printDataToPage(dataToPrint);
     })
  
@@ -53,10 +49,8 @@ $(document).ready(function() {
   }
  
   function removeInstaPost(id) {
-  	console.log(id)
     var excludedPosts = localStorage.getItem('excludedPosts') ? localStorage.getItem('excludedPosts').split(',') : [];
- 		
- 		console.log(excludedPosts);
+
     excludedPosts.push(id);
     localStorage.setItem('excludedPosts', excludedPosts);
   }
